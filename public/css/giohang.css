@@ -1,0 +1,109 @@
+.content-cart{
+    position: relative;
+    top: 180px;
+    padding-left: 50px;
+    width: 65%;
+
+}
+.content-cart  th{
+    border-bottom:  2px solid rgb(219, 219, 219);
+    padding-left: 10px;
+}
+.content-cart  td{
+    padding: 10px 20px 10px 20px;
+}
+.delete-product{
+    margin-top: 50px;
+    margin-right: 10px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: inherit;
+    border: 1px solid rgb(185, 185, 185);
+}
+.delete-product:hover{
+    border: 1px solid rgb(0, 0, 0);
+}
+.name-product{
+    margin-top: 53px;
+}
+.price-cart{
+    color: rgb(233, 2, 2);
+}
+.qty{
+    width: 100px;
+}
+.qty .count {
+    color: #000;
+    display: inline-block;
+    vertical-align: top;
+    text-align:  left;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 20px;
+    padding: 0 2px
+    ;min-width: 35px;
+    text-align: center;
+}
+.qty .plus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: white;
+    width: 20px;
+    height: 20px;
+    font: 20px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #2b2a2a ;
+    }
+.qty .minus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: white;
+    width: 20px;
+    height: 20px;
+    font: 20px/1 Arial,sans-serif;
+    border-radius: 50%;
+    text-align: center;
+    background-clip: padding-box;
+    background-color: #2b2a2a ;
+}
+span{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+.qty input{  
+    border: 0;
+    width: 2%;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input:disabled{
+    background-color:white;
+}
+
+.add-product{
+    border: 2px solid rgb(37, 52, 121);
+    padding: 5px 10px 5px 10px;
+    color: rgb(37, 52, 121);
+    background-color: inherit;
+}
+.add-product:hover{
+    background-color: rgb(37, 52, 121);
+    color: #FFF;
+}
+.update-product{
+    background-color: rgb(138, 138, 138);
+    color: #FFf;
+    border: none;
+    padding: 7px 10px 7px 10px;
+}
+.update-product:hover{
+    background-color: rgb(76, 76, 76);
+}

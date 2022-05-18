@@ -1,0 +1,147 @@
+
+.sanpham{
+    float: left;
+    position: relative;
+    top: 180px;
+    width: 70%;
+    padding-left: 10px;
+    border-left: 1px solid rgb(227, 227, 227);    
+}
+.anhsp{
+    float: left;
+    margin-right: 30px;
+    margin-bottom: 30px;
+}
+.product-inf{
+    float: left;
+    width: 40%;
+}
+.product-inf h3{
+    color: rgb(65, 65, 65);
+    font-weight: bold;
+    font-size:30px;
+    width: fit-content;
+    padding-bottom: 10px;
+    border-bottom: 3px solid rgb(124, 124, 124);    
+}
+.product-inf .gia{
+    color: #e84545;
+    padding-top: 20px;
+    font-size:25px;
+    font-weight: bold;
+}
+.product-inf .brand{
+    font-size:20px;
+    padding-top: 40px;
+}
+
+.product-inf .size{
+    font-size:20px;
+    padding-top: 20px;
+}
+
+.product-inf .color{
+    font-size:20px;
+    padding-top: 20px;
+}
+.product-inf .color select{
+    width: 48%;
+    padding: 6px;
+    outline: none;
+}
+.product-inf .hangcon{
+    font-size:20px;
+    padding-top: 20px;
+}
+.product-inf .soluong{
+    font-size:20px;
+    padding-top: 20px;
+}
+.product-inf .soluong input{
+    padding: 7px;
+    border-radius: 3px 0 0 3px;
+    border-right: 0;
+    padding-left: 5px;
+    border:1px solid rgb(155, 155, 155);
+    margin-bottom: 0;
+    outline: none;
+    width: 40%;
+}
+.product-inf button{
+    height: 40px;
+    border-radius: 0 3px 3px 0;
+    margin-top: 40px;
+    border: none;
+    background-color: rgb(80, 80, 80);
+    color: rgb(255, 255, 255);
+    width: 30%;
+}
+.product-inf .yeuthich{
+    margin-top: 30px;
+}
+.product-inf i{
+    font-size:20px;
+    margin: 0 10px 20px 0;
+}
+.product-inf .mota{
+    font-size:20px;
+    padding-top: 20px;
+}
+.product-inf .mota p{
+    color: rgb(122, 122, 122);
+    padding-top: 10px;
+}
+.product-footer{
+    border-top: 1px solid rgb(161, 161, 161);
+    padding-top: 20px;
+    width: 100%;
+}
+.danhgiasp{
+    width: 47%;
+    float: left;
+}
+.danhgiasp .binhluan{
+    width: 100%;
+    padding: 10px;   
+}
+.binhluan p{
+    font-size: 18px;
+}
+.binhluan h4{
+    display: inline-block;
+    font-weight: bold;
+}
+.time-cmt{
+    font-size:13px;
+}
+.themdanhgia{
+    border: 2px solid rgb(160, 160, 160);
+    width: 47%;
+    float: left;
+    padding: 15px;
+}
+.themdanhgia h3{
+    margin-bottom: 10px;
+}
+.themdanhgia h4{
+    margin-bottom: 10px;
+    color: #383838;
+}
+.themdanhgia textarea{
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+}
+.themdanhgia button{
+    height: 40px;
+    border-radius: 0 3px 3px 0;
+    margin-top: 10px;
+    border: none;
+    background-color: rgb(54, 54, 54);
+    color: rgb(255, 255, 255);
+    width: 30%;
+}
+.chitiet-footer{
+    position: relative;
+    top: 0;
+}
