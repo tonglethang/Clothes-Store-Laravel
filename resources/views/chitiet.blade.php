@@ -39,6 +39,7 @@
             <label class="psw-text"><a>Quên mật khẩu ?</a></label>
             <label class="psw-text">Bạn chưa có tài khoản ? <a href="/khachhang/dangky">Đăng ký</a></label> 
             <label class="psw-text"><a href="/admin/login">Đăng nhập với tư cách Admin</a></label>
+            <label class="psw-text"><a href="/giaohang/login">Đăng nhập với tư cách người giao hàng</a></label>
         </form>
         
         
@@ -76,7 +77,8 @@
                 <div class="product-inf">
              
                     <h3>{{$product->TenSP}}</h3>
-                    <form method="get" action="/khachhang/giohang/{{$product->MaSP}}">
+                    <form method="get" action="/khachhang/giohang/{{$product->MaSP}}&{{$product->Soluongcon}}">
+                        @csrf
                         <div class="gia"><p><?php echo number_format($product->Gia,0,",", ".") ?><u>đ</u></p></div>
                         <div class="brand">
                             Hãng: {{$product->Hang}}
@@ -88,10 +90,10 @@
                             
                         </div>
                         <div class="hangcon">
-                            Số lượng hàng còn: {{$product->SoLuong}}
+                            Số lượng hàng còn: {{$product->Soluongcon}}
                         </div>
                         <div class="soluong">
-                            Số lượng: <input type="number" name="soluong" value="1" min="1" max="{{$product->SoLuong}}"/>
+                            Số lượng: <input type="number" name="soluong" value="1" min="0" max="{{$product->Soluongcon}}"/>
                         </div>
                         @if (!session('username'))
                         <button onclick="change_login()" type="button" name="btnMua">MUA HÀNG</button>
@@ -100,9 +102,6 @@
                         <button type="submit" name="btnMua">MUA HÀNG</button>
                         @endif
                     </form>
-                    <div class="yeuthich">
-                        <i class="fas fa-heart"></i>Thêm vào danh sách yêu thích
-                    </div>
                     <div class="id">
                         Mã sản phẩm:{{$product->MaSP}}
                     </div>
@@ -113,10 +112,10 @@
                 <div class="product-footer" style="clear:both">
                     <div class="danhgiasp">
                         <h3>Đánh giá của khách hàng về sản phẩm: </h3>
-                        @foreach($comment as $comment)
-                        @if(!$comment)
-                        <h4>Chưa có bình luận </h4>
+                        @if(count($comment) == 0)
+                        <h4 style="padding: 20px 0 0 15px; font-size: 20px">Chưa có bình luận nào</h4>
                         @endif
+                        @foreach($comment as $comment)
                         <div class="binhluan">
                             <h4>{{$comment->TenKH}}: </h4>
                             <span class="time-cmt">{{$comment->time_create}}</span>

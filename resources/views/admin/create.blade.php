@@ -160,13 +160,10 @@
     </div>
     <hr>
     <ul class="app-menu">
-      <li><a class="app-menu__item " href="#"><i class='app-menu__icon bx bx-user-voice'></i><span
-            class="app-menu__label">Quản lý khách hàng</span></a></li>
-      <li><a class="app-menu__item active" href="/admin"><i
-            class='app-menu__icon bx bx-purchase-tag-alt'></i><span class="app-menu__label">Quản lý sản phẩm</span></a>
-      </li>
-      <li><a class="app-menu__item" href="/amdin/"><i class='app-menu__icon bx bx-task'></i><span
-            class="app-menu__label">Quản lý đơn hàng</span></a></li>
+      <a href="/admin"><li><button class="select" onclick="onchange_sanpham()">Quản lí sản phẩm</button></li></a>
+      <a href="/admin"><li><button class="select" onclick="onchange_khachhang()">Quản lí khách hàng</button></li></a>
+      <a href="/admin"><li><button class="select" onclick="onchange_comment()">Quản lí comment</button></li></a>
+      <a href="/admin"><li><button class="select">Quản lí đơn đặt hàng</button></li></a>
     </ul>
   </aside>
   <main class="app-content">

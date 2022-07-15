@@ -53,6 +53,8 @@ Route::get('/admin/create', [App\Http\Controllers\ProductController::class, 'cre
 Route::post('/admin/create', [App\Http\Controllers\ProductController::class, 'store']);
 //admin
 Route::get('admin', [App\Http\Controllers\ProductController::class, 'admin']);
+Route::post('/admin', [App\Http\Controllers\ProductController::class, 'admin']);
+Route::get('/admin/giaohang/{MaDon}', [App\Http\Controllers\ProductController::class, 'admin_gh']);
 // Update 
 Route::get('/admin/update/{MaSP}', [App\Http\Controllers\ProductController::class, 'edit']);
 Route::post('/admin/update/{MaSP}', [App\Http\Controllers\ProductController::class, 'update']);
@@ -91,5 +93,28 @@ Route::post('/chitiet/{MaSP}&{MaKH}', [App\Http\Controllers\KhachHangController:
 
 // gio hang
 Route::get('/khachhang/giohang', [App\Http\Controllers\KhachHangController::class, 'giohang']);
-Route::get('/khachhang/giohang/{MaSP}', [App\Http\Controllers\KhachHangController::class, 'muahang']);
-Route::get('/khachhang/giohang/delete', [App\Http\Controllers\KhachHangController::class, 'delete']);
+Route::get('/khachhang/giohang/{MaSP}&{SoLuong}', [App\Http\Controllers\KhachHangController::class, 'cart']);
+Route::get('/khachhang/giohang/delete/{MaSP}', [App\Http\Controllers\KhachHangController::class, 'delete_cart']);
+Route::get('/khachhang/giohang/update/{Soluong}', [App\Http\Controllers\KhachHangController::class, 'update_cart']);
+Route::post('/khachhang/giohang', [App\Http\Controllers\KhachHangController::class, 'dathang']);
+Route::get('/khachhang/thanhtoan/{MaDon}', [App\Http\Controllers\KhachHangController::class, 'chitiet_donhang']);
+Route::get('/khachhang/thanhtoan', [App\Http\Controllers\KhachHangController::class, 'chitiet_thanhtoan']);
+Route::get('/khachhang/lichsu', [App\Http\Controllers\KhachHangController::class, 'lichsu']);
+
+
+//giao hàng
+Route::get('/admin/giaohang/create', [App\Http\Controllers\ProductController::class, function(){
+    return view('admin.create_gh');
+}]);
+Route::post('/admin/giaohang/create', [App\Http\Controllers\ProductController::class, 'create_gh']);
+Route::get('/giaohang', [App\Http\Controllers\ProductController::class, 'giaohang']);
+Route::get('/giaohang/login', function () {
+    $message = null;
+    return view('giaohang.login', compact('message'));   
+});
+Route::post('/giaohang/login', [App\Http\Controllers\ProductController::class, 'login_gh']);
+Route::get('/giaohang/xacnhan/{MaDon}', [App\Http\Controllers\ProductController::class, 'xacnhan_gh']);
+Route::get('/giaohang/logout', [App\Http\Controllers\ProductController::class, function(){
+    Session::put('TenGH', null);
+    return redirect('/');
+}]);

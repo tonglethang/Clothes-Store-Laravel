@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,6 +33,7 @@
             <label class="psw-text"><a href="/khachhang/forgetpass">Quên mật khẩu ?</a></label>
             <label class="psw-text">Bạn chưa có tài khoản ? <a href="/khachhang/dangky">Đăng ký</a></label> 
             <label class="psw-text"><a href="/admin/login">Đăng nhập với tư cách Admin</a></label>
+            <label class="psw-text"><a href="/giaohang/login">Đăng nhập với tư cách người giao hàng</a></label>
         </form>
         
     </div>
@@ -130,7 +132,6 @@
                 <h4>DANH MỤC SẢN PHẨM</h4>
                 <button id="button1" onclick="content1()"><a>SẢN PHẨM MỚI</a></button>
                 <button id="button2" onclick="content2()"><a>HÀNG CAO CẤP</a></button>
-                <button id="button3" onclick="content3()"><a>BÁN CHẠY NHẤT</a></button>
             </div>
             <div class="content1" id="content1">
                 @foreach($products1 as $product)
@@ -149,23 +150,11 @@
                     <a style="text-decoration: none;" href="/chitiet/{{$product->MaSP}}">
                     <div class="anh"><img src="{{ asset('upload/' . $product->Image) }}" /></div>
                     <p>{{$product->TenSP}}</p>
-                    <div class="price">{{$product->Gia}}<u>đ</u></div> 
+                    <div class="price"><?php echo number_format($product->Gia,0,",", ".")?><u>đ</u></div> 
                     </a>
                 </div>
                 @endforeach
-            </div>
-            <div class="content3" id="content3">
-                @foreach($products3 as $product)
-                <div class="product">
-                    <a style="text-decoration: none;" href="/chitiet/{{$product->MaSP}}">
-                    <div class="anh"><img src="{{ asset('upload/' . $product->Image) }}" /></div>
-                    <p>{{$product->TenSP}}</p>
-                    <div class="price">{{$product->Gia}}<u>đ</u></div> 
-                    </a>
-                </div>
-                @endforeach
-            </div>
-           
+            </div>     
         </div>
         @include('template/footer')
     </div>

@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Trang chủ</title>
+    <title>Thông tin khách hàng</title>
     <link href="{{ asset('css/index.css') }}"  rel="stylesheet" type="text/css">
+    <link href="{{ asset('js/index.js') }}" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
@@ -13,8 +14,26 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js" ></script>
-    <script>document.addEventListener("touchstart", function(){}, true);</script>
-    <script src="js/index.js">
+
+    <script>   
+    document.addEventListener("touchstart", function(){}, true);
+    function validate(evt) {
+        var theEvent = evt || window.event;
+
+        // Handle paste
+        if (theEvent.type === 'paste') {
+            key = event.clipboardData.getData('text/plain');
+        } else {
+        // Handle key press
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+        }
+        var regex = /[0-9]|\./;
+        if( !regex.test(key) ) {
+            theEvent.returnValue = false;
+            if(theEvent.preventDefault) theEvent.preventDefault();
+        }
+    }
     </script>
 </head>
 <body>  
@@ -52,7 +71,7 @@
                     <input type="text" name="email" value="{{$khachhang->Email}}" disabled>
                 </label>
                 <label for="SĐT">SĐT: 
-                    <input type="number" name="sdt" value="{{$khachhang->SDT}}">
+                    <input type='text' onkeypress='validate(event)'  name="sdt" value="{{$khachhang->SDT}}"  />
                 </label>
                 <label for="SĐT">Địa chỉ: 
                     <input type="text" name="diachi" value="{{$khachhang->DiaChi}}">

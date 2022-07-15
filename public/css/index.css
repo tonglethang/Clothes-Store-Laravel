@@ -589,7 +589,8 @@
     top: 200px;
 }
 .exit2{
-    display: inline-block;
+    position: relative;
+    right: 0px;
 }
 /* INFO khach hang */
 .info{

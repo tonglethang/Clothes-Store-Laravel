@@ -2,7 +2,8 @@
     position: relative;
     top: 180px;
     padding-left: 50px;
-    width: 65%;
+    width: 60%;
+    float: left;
 
 }
 .content-cart  th{
@@ -99,11 +100,50 @@ input:disabled{
     color: #FFF;
 }
 .update-product{
-    background-color: rgb(138, 138, 138);
+    background-color: rgb(86, 86, 86);
     color: #FFf;
     border: none;
     padding: 7px 10px 7px 10px;
 }
 .update-product:hover{
-    background-color: rgb(76, 76, 76);
+    background-color: rgb(19, 18, 18);
+}
+.hoadon{
+    width: 35%;
+    float: left;
+    position: relative;
+    top: 180px;
+    border: 1px solid rgb(22, 18, 127);
+    margin-right: 50px;
+    padding:20px;
+}
+.hoadon h4{
+    padding: 0px 0 10px 0;
+}
+.hoadon table{
+    width: 100%;
+    margin-bottom: 20px;
+}
+.hoadon table th{
+    border-bottom: 2px solid rgb(224, 224, 224);
+  
+}
+.hoadon table td{
+    border-bottom: 1px solid rgb(224, 224, 224);
+    padding: 10px 0 10px 0;
+  
+}
+.name-product{
+    text-align: left;
+}
+.total-product{
+    text-align: right;
+}
+.hoadon input[type="submit"]{
+    margin-top: 20px;
+    height: 40px;
+    border: none;
+    background-color:rgb(31, 31, 31);
+    color:rgb(255, 255, 255);
+    width: 130px;
 }

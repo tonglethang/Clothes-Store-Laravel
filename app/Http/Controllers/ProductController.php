@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\KhachHang;
 use App\Models\Comment;
+use App\Models\DonDatHang;
+use App\Models\GiaoHang;
 use Illuminate\Support\Facades\DB;
 use Session;
 use Carbon\Carbon;
@@ -27,13 +29,9 @@ class ProductController extends Controller
         $products2 = $tmp2->take(8);
         $products2->all();
 
-        $tmp3 = DB::table('sanpham')
-                ->orderBy('Gia', 'desc')
-                ->get();
-        $products3 = $tmp3->take(8);
-        $products3->all();
+
         // trả về view hiển thị danh sách 
-        return view('welcome', compact('products1', 'products2', 'products3'));
+        return view('welcome', compact('products1', 'products2'));
     }
     //goi y timkiem
     public function action(Request $request)
@@ -62,7 +60,12 @@ class ProductController extends Controller
         $tmp = $request->txtSearch; 
         if($tmp != null){
             $products = Product::where('TenSP', 'like', "%{$tmp}%")->paginate(12);
-            return view('cuahang', compact('products'));
+            $tmp3 = DB::table('sanpham')
+            ->orderBy('MaSP', 'desc')
+            ->get();
+            $product2 = $tmp3->take(8);
+            $product2->all();
+            return view('cuahang', compact('products', 'product2'));
         }
         else{
             $products = DB::table('sanpham')->paginate(12);
@@ -114,18 +117,66 @@ class ProductController extends Controller
         Session::put('pass', null);
         return redirect('/');
     }
-    public function admin(){
+    public function admin(Request $request){
         $this->Authlogin();
-        $products = DB::table('sanpham')->get();
-        $products->all();
+        if($request->search){
+            $products = DB::table('sanpham')->where('TenSP','like', "%{$request->search}%")->get();
+            $products->all();
+        }
+        else{
+            $products = DB::table('sanpham')->get();
+            $products->all();
+        }
         $khachhang = DB::table('khachhang')->get();
         $khachhang->all();
+
+        $dondathang1 = DB::table('dondathang')->join('khachhang', 'dondathang.MaKH', 'khachhang.MaKH')
+                                            ->join('sanpham', 'dondathang.MaSP', 'sanpham.MaSP')
+                                            ->where('status', 'Đang giao hàng')
+                                            ->get();
+        $dondathang1->all();
+        $dondathang2 = DB::table('dondathang')->join('khachhang', 'dondathang.MaKH', 'khachhang.MaKH')
+                                            ->join('sanpham', 'dondathang.MaSP', 'sanpham.MaSP')
+                                            ->where('status', 'Đã nhận hàng')
+                                            ->get();
+        $dondathang2->all();
+
+
         $comment = DB::table('comment')->join('khachhang', 'comment.MaKH', 'khachhang.MaKH')
                                        ->join('sanpham', 'comment.MaSP', 'sanpham.MaSP')
                                        ->get();
         $comment->all();
-        // trả về view hiển thị danh sách 
-        return view('admin.welcome', compact('products', 'khachhang', 'comment'));
+
+        //thống kê doanh thu
+        $tmp1 = DonDatHang::select('Tongtien')->get();
+        $doanhthu = null;
+        for($i = 0; $i < $tmp1->count(); $i++){
+            $doanhthu += $tmp1[$i]['Tongtien'];
+        }
+        //sản phẩm bán chạy nhất
+        $tmp2 = Product::select('TenSP','SoLuong', 'Soluongcon')->get();
+        $soluongbanra = 0;
+        $max = 0;
+        $vitri = null;
+        for($i = 0; $i < $tmp2->count(); $i++){
+            $soluongbanra = $tmp2[$i]['SoLuong'] - $tmp2[$i]['Soluongcon'];
+            if($soluongbanra > $max){
+                $max = $soluongbanra;
+                $vitri = $i;
+            }
+        }
+        $sanphambanchay = $tmp2[$vitri]['TenSP'];
+        //số lượng khách hàng
+        $soluongkh = DB::table('khachhang')->count();
+        //số lượng đơn hàng đang giao
+        $soluongdh = DB::table('dondathang')->count();
+        //giao hang
+        $giaohang = DB::table('giaohang')->get();
+        $giaohang->all();
+
+
+        // // trả về view hiển thị danh sách 
+        return view('admin.welcome', compact('products', 'khachhang', 'comment', 'dondathang1','dondathang2', 'doanhthu', 'sanphambanchay', 'soluongkh', 'soluongdh', 'giaohang'));
     }
     public function deleteKH($MaKH){
     // Tìm đến đối tượng muốn xóa
@@ -160,6 +211,7 @@ class ProductController extends Controller
         $data['TenSP'] = $request->TenSP;
         $data['Hang'] = $request->Hang;
         $data['SoLuong'] = $request->SoLuong;
+        $data['Soluongcon'] =  $request->SoLuong;
         $data['Color'] = $request->Color;
         $data['Gia'] = $request->Gia;
         $data['Image'] = $file_name;
@@ -197,6 +249,7 @@ class ProductController extends Controller
         $data['TenSP'] = $request->TenSP;
         $data['Hang'] = $request->Hang;
         $data['SoLuong'] = $request->SoLuong;
+        $data['Soluongcon'] = $request->Soluongcon;
         $data['Color'] = $request->Color;
         $data['Gia'] = $request->Gia;
         $data['Image'] = $file_name;
@@ -209,6 +262,7 @@ class ProductController extends Controller
         Product::where('MaSP', $MaSP )->update(['TenSP' => $data['TenSP'],
                             'Hang'=> $data['Hang'],
                             'Soluong'=> $data['SoLuong'],
+                            'Soluongcon'=> $data['Soluongcon'],
                             'Color'=> $data['Color'],
                             'Gia'=> $data['Gia'],
                             'Image'=> $data['Image'],
@@ -224,5 +278,59 @@ class ProductController extends Controller
         $this->Authlogin();
         Product::where('MaSP', $MaSP )->delete();
         return redirect('/admin');
+    }
+
+    //Giao hang
+    public function create_gh(Request $request){
+        $data['TenGH'] = $request->TenGH;
+        $data['DiaChi'] = $request->DiaChi;
+        $data['SDT'] = $request->SDT;
+        $data['TenDN'] = $request->TenDN;
+        $data['Pass'] = $request->Pass;
+        GiaoHang::create($data);
+        return redirect('/admin');
+    }
+    public function giaohang(){        
+        $dondathang1 = DB::table('dondathang')->join('khachhang', 'dondathang.MaKH', 'khachhang.MaKH')
+                                                ->join('sanpham', 'dondathang.MaSP', 'sanpham.MaSP')
+                                                ->where('status', 'Đang giao hàng')
+                                                ->get();
+        $dondathang1->all();
+        $dondathang2 = DB::table('dondathang')->join('khachhang', 'dondathang.MaKH', 'khachhang.MaKH')
+                                                ->join('sanpham', 'dondathang.MaSP', 'sanpham.MaSP')
+                                                ->where('status', 'Đã nhận hàng')
+                                                ->get();
+        $dondathang2->all();
+
+        return view('giaohang.welcome', compact('dondathang1', 'dondathang2'));
+    }
+    public function xacnhan_gh($MaDon){
+        DonDatHang::where('MaDon', $MaDon)->update(['status'=> 'Đã nhận hàng',
+        'ThoiGianNH'=>Carbon::now('Asia/Ho_Chi_Minh')]);
+        return redirect()->back();
+    }
+    public function AuthloginGH(){
+        $admin_name = Session::get('TenGH');
+        if($admin_name){
+            return redirect('/giaohang');
+        }
+        else{
+            return redirect('/giaohang/login')->send();
+        }
+    }
+    public function login_gh(Request $request){
+        $tendangnhap = $request->name;
+        $pass = $request->pass;
+        $tmp1 = GiaoHang::select('TenDN')->get();
+        $tmp2 = GiaoHang::select('Pass')->get();
+        $message = "Tên đăng nhập hoặc mật khẩu không đúng";
+        for($i = 0; $i < $tmp1->count(); $i++){
+            if( $tendangnhap == $tmp1[$i]['TenDN'] && $pass == $tmp2[$i]['Pass']){
+                Session::put('TenGH', $tendangnhap);
+                $this-> AuthloginGH();
+                return redirect('/giaohang');
+            }
+        }
+        return view('giaohang.login', compact('message'));
     }
 }

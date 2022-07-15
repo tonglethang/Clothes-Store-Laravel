@@ -1,4 +1,4 @@
-<div class="footer">
+<div class="footer" style="clear:both">
             <div class="thongtin">
                 <div class="left" style="float:left">
                     <h4>THỜI GIAN MỞ CỬA</h4>

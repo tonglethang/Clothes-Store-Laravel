@@ -75,10 +75,9 @@
     background-color: rgb(80, 80, 80);
     color: rgb(255, 255, 255);
     width: 30%;
+    margin-bottom: 30px;
 }
-.product-inf .yeuthich{
-    margin-top: 30px;
-}
+
 .product-inf i{
     font-size:20px;
     margin: 0 10px 20px 0;

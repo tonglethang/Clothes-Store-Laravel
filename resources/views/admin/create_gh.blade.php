@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Sửa sản phẩm| Quản trị Admin</title>
+  <title>Thêm sản phẩm | Quản trị Admin</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -58,6 +58,23 @@
         $(".filename").text("");
       });
     })
+    function validate(evt) {
+        var theEvent = evt || window.event;
+
+        // Handle paste
+        if (theEvent.type === 'paste') {
+            key = event.clipboardData.getData('text/plain');
+        } else {
+        // Handle key press
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+        }
+        var regex = /[0-9]|\./;
+        if( !regex.test(key) ) {
+            theEvent.returnValue = false;
+            if(theEvent.preventDefault) theEvent.preventDefault();
+        }
+    }
   </script>
 </head>
 
@@ -164,95 +181,45 @@
       <a href="/admin"><li><button class="select" onclick="onchange_khachhang()">Quản lí khách hàng</button></li></a>
       <a href="/admin"><li><button class="select" onclick="onchange_comment()">Quản lí comment</button></li></a>
       <a href="/admin"><li><button class="select">Quản lí đơn đặt hàng</button></li></a>
+      <a href="/admin"><li><button class="select">Quản lí giao hàng</button></li></a>
+      <a href="/admin"><li><button class="select">Thống kê</button></li></a>
     </ul>
   </aside>
   <main class="app-content">
     <div class="app-title">
       <ul class="app-breadcrumb breadcrumb">
-        <li class="breadcrumb-item">Danh sách sản phẩm</li>
-        <li class="breadcrumb-item"><a href="#">Chinh sửa sản phẩm</a></li>
+        <li class="breadcrumb-item">Danh sách người giao hàng</li>
+        <li class="breadcrumb-item"><a href="#">Thêm người giao hàng</a></li>
       </ul>
     </div>
     <div class="row">
       <div class="col-md-12">
         <div class="tile">
-          <h3 class="tile-title">Tạo mới sản phẩm</h3>
+          <h3 class="tile-title">Tạo mới tài khoản</h3>
           <div class="tile-body">
-          @foreach($products as $product)
-            <form action="/admin/update/{{ $product->MaSP }}" method="post" enctype="multipart/form-data" class="row">
+            <form action="/admin/giaohang/create" method="post" enctype="multipart/form-data" class="row">
               @csrf
               <div class="form-group col-md-3">
-                <label class="control-label" for="name">Tên sản phẩm</label>
-                <input class="form-control" type="text" name="TenSP" value="{{ $product->TenSP }}" required="required">
+                <label class="control-label" >Họ và tên</label>
+                <input class="form-control" type="text" name="TenGH" required="required">
               </div>
               <div class="form-group col-md-3">
-                <label class="control-label" for="hang">Hãng</label>
-                <input class="form-control" type="text" name="Hang" value="{{ $product->Hang }}" required="required">
+                <label class="control-label" >Địa chỉ</label>
+                <input class="form-control" type="text" name="DiaChi" required="required">
               </div>
               <div class="form-group col-md-3">
-                <label class="control-label" for="SoLuong">Số lượng</label>
-                <input class="form-control" type="number" name="SoLuong" value="{{ $product->SoLuong }}" required="required">
+                <label class="control-label" >SĐT</label>
+                <input class="form-control" onkeypress='validate(event)' type="text" name="SDT" required="required">
               </div>
               <div class="form-group col-md-3">
-                <label class="control-label" for="SoLuong">Số lượng hàng còn</label>
-                <input class="form-control" type="number" name="Soluongcon" value="{{ $product->Soluongcon }}"  min="0" max="{{ $product->SoLuong }}" required="required">
+                <label class="control-label" >Tên đăng nhập</label>
+                <input class="form-control" type="text" name="TenDN" required="required">
               </div>
               <div class="form-group col-md-3">
-                <label class="control-label" for="color">Màu</label>
-                <input class="form-control" type="text" name="Color" value="{{ $product->Color }}" required="required">
+                <label class="control-label" >Pass</label>
+                <input class="form-control" type="password" name="Pass" required="required">
               </div>
-              <div class="form-group col-md-3">
-                <label class="control-label" for="gia">Giá</label>
-                <input class="form-control" type="number" name="Gia" value="{{ $product->Gia}}" required="required">
-              </div>
-              <div class="form-group col-md-3">
-                <label class="control-label" for="size">Size</label>
-                <input class="form-control" type="text" name="Size"  value="{{ $product->Size}}" required="required">
-              </div>
-              <div class="form-group col-md-3">
-                <label for="Loai" class="control-label">Loại</label>
-                <select class="form-control" id="exampleSelect1" name="Loai">
-                  <option>-- Chọn loại sản phẩm --</option>
-                  <option <?php if( $product->Loai == 'Áo'){echo("selected");}?>>Áo</option>
-                  <option <?php if( $product->Loai == 'Quần'){echo("selected");}?>>Quần</option>
-                  <option <?php if( $product->Loai == 'Giày'){echo("selected");}?>>Giày</option>
-                  <option <?php if( $product->Loai == 'Túi xách'){echo("selected");}?>> Túi xách</option>
-                  <option <?php if( $product->Loai == 'Nón'){echo("selected");}?>>Nón</option>
-                  <option>Khác</option>
-                </select>
-              </div>
-              <div class="form-group col-md-3">
-                <label for="DanhMuc" class="control-label">Danh mục</label>
-                <select class="form-control" id="exampleSelect1" name="DanhMuc">
-                  <option>-- Chọn danh mục --</option>
-                  <option <?php if( $product->DanhMuc == 'Nam'){echo("selected");}?> value="Nam">Nam</option>
-                  <option <?php if( $product->DanhMuc == 'Nữ'){echo("selected");}?> value="Nữ">Nữ</option>
-                  <option <?php if( $product->DanhMuc == 'Nam và nữ'){echo("selected");}?> value="Nam và nữ">Nam và nữ</option>
-                </select>
-              </div>
-              <div class="form-group col-md-12">
-                <label class="control-label">Ảnh sản phẩm</label>
-                <div id="myfileupload">
-                  <input type="file" id="uploadfile" name="image_upload" onchange="readURL(this);" required="required" />
-                </div>
-                <div id="thumbbox">
-                  <img height="450" width="400" alt="Thumb image" id="thumbimage" style="display:none" />
-                  <a class="removeimg" href="javascript:"></a>
-                </div>
-                <div id="boxchoice">
-                  <a href="javascript:" class="Choicefile"><i class="fas fa-cloud-upload-alt"></i> Chọn ảnh</a>
-                  <p style="clear:both"></p>
-                </div>
-
-              </div>
-              <div class="form-group col-md-12">
-                <label class="control-label">Mô tả sản phẩm</label>
-                <textarea class="form-control" name="Note" id="mota">{{ $product->Note}}</textarea>
-                <script>CKEDITOR.replace('mota');</script>
-              </div>
-
           </div>
-          @endforeach
           <button class="btn btn-save" type="submit">Lưu lại</button>
           <a class="btn btn-cancel" href="/admin">Hủy bỏ</a>
         </div>

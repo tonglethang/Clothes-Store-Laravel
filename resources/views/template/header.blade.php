@@ -2,14 +2,14 @@
 <nav class="header">
 @if (session('message1'))
         <div class="alert alert-success" style="position: relative; z-index: 165641;" id="alert-message">
-            <p>{{ session('message1') }}</p>
+            <p style="float:left; width: 90%; margin-left: 50px">{{ session('message1') }}</p>
             <div class="exit2" id="exit2">
-                <button onclick="alertmessage()" style="border: none; background-color: inherit; font-size:20px"><i class="fas fa-times"></i></button>
+                <button onclick="alertmessage()" style="border: none; background-color: inherit; font-size:30px; margin-top:-7px"><i class="fas fa-times"></i></button>
             </div>
         </div>
 @endif
             <div class="logo">
-                <a style="color: black">ABCDEF</a>
+                <a href="/"style="color: black; text-decoration: none;">TDS Store</a>
             </div>
             <div class="menu">
                 <div class="menu-ngang">
@@ -86,6 +86,7 @@
                     <i class="fa-solid fa-user"></i>
                     <label>{{ session('username') }} <i class="fa-solid fa-angle-down"></i>
                         <ul class="drop2">
+                            <li><i class="fa-solid fa-clock"></i><a href="/khachhang/lichsu">Lịch sử mua hàng</a></li>
                             <li><i class="fa-solid fa-circle-info"></i><a href="/khachhang/info/{{session('MaKH')}}">Thông tin</a></li>
                             <li><i class="fa-solid fa-key"></i><a href="/khachhang/changepass/{{session('MaKH')}}">Đổi mật khẩu</a></li>
                             <li><i class="fa-solid fa-arrow-right-from-bracket"></i><a href="/khachhang/dangxuat" onclick="return confirm('Bạn chắc chắn đăng xuất không?');">Đăng xuất</a></li>

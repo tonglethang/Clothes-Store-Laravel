@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\KhachHang;
 use App\Models\Product;
 use App\Models\Comment;
+use App\Models\DonDatHang;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Session;
@@ -76,7 +77,7 @@ class KhachHangController extends Controller
             $content = 'Mã xác nhận email của bạn là: '.$maxacnhan;
             $mail_data = [
                 'recipient'=> $request->email,
-                'fromEmail'=> 'tsdstoredau@gmail.com',
+                'fromEmail'=> 'tdsstoredau@gmail.com',
                 'fromName'=> "TDS store",
                 'subject'=>"Xác nhận tài khoản email",
                 'body'=>$content,
@@ -128,7 +129,6 @@ class KhachHangController extends Controller
         for($i = 0; $i < $tmp1->count(); $i++){
             if( $tendangnhap == $tmp1[$i]['TenDN'] && $pass == $tmp2[$i]['Pass']){
                 Session::put('username', $tendangnhap);
-                Session::put('password', $pass);
                 Session::put('MaKH', $MaKH[0]['MaKH']);
                 $this->AuthDangnhap();
                 return redirect('/');
@@ -174,6 +174,12 @@ class KhachHangController extends Controller
         Session::put('username', null);
         Session::put('password', null);
         Session::put('display', null);
+        Session::put('Soluong', null);
+        Session::put('MaSP', null);
+        Session::put('Image', null);
+        Session::put('TenSP', null);
+        Session::put('Gia', null);
+        Session::put('Tongtien', null);
         return redirect('/');
     }
 
@@ -219,40 +225,93 @@ class KhachHangController extends Controller
     //gio hang
     public function giohang(){
         $this->AuthDangnhap();
-        $data = DB::table('dondathang')->join('sanpham', 'dondathang.MaSP', '=', 'sanpham.MaSP')->get();  
-
-        return view('khachhang.giohang', compact('data'));
+        $khachhang= DB::table('khachhang')->where('MaKH', Session::get('MaKH'))->get();
+        return view('khachhang.giohang', compact('khachhang'));
     }
-    public function muahang(Request $request, $MaSP){
+    public function cart(Request $request, $MaSP, $Soluong){
+        $this->AuthDangnhap();
         $soluong = $request->soluong;
         // $data2 = DB::table('dondathang')->join('sanpham', 'dondathang.MaSP', '=', 'sanpham.MaSP')->get();
         Session::put('Soluong', $soluong);
+        Session::put('Soluongbandau', $Soluong);
         Session::put('MaSP', $MaSP);
-        
         $data = Product::where('MaSP', $MaSP)->get();
+
         Session::put('Image', $data[0]['Image']);
         Session::put('TenSP', $data[0]['TenSP']);
         Session::put('Gia', $data[0]['Gia']);
         $tongtien = $soluong * $data[0]['Gia'];
         Session::put('Tongtien', $tongtien);
         
-        // $query = DB::table('dondathang')->insert(['MaKH'=>Session::get('MaKH'),
-        //                                         'MaSP'=> $MaSP,
-        //                                         'TongTien'=> $MaSP,
-        //                                         'SoLuongDH'=>$data,
-        //                                         'ThoiGianDH'=>Carbon::now()]);
+
         return redirect('/khachhang/giohang');
     }
-    public function delete(){
+    public function dathang(Request $request){
+        $this->AuthDangnhap();
+        $thanhtoan = $request->thanhtoan;
+        $Soluong = Product::select('Soluongcon')->where('MaSP', Session::get('MaSP'))->get();
+        $Soluongcon = $Soluong[0]['Soluongcon'] - Session::get('Soluong');
+        DonDatHang::create(['MaKH'=>Session::get('MaKH'),
+                            'MaSP'=>Session::get('MaSP'),
+                            'TongTien'=>Session::get('Tongtien'),
+                            'SoLuongDH'=>Session::get('Soluong'),
+                            'Phuongthuc'=> $thanhtoan,
+                            'ThoiGianDH'=>Carbon::now('Asia/Ho_Chi_Minh'),
+                            'status'=> "Đang giao hàng"
+                            ]);
+        Product::where('MaSP', Session::get('MaSP'))->update(['Soluongcon'=> $Soluongcon]);
+        return redirect('/khachhang/thanhtoan');
+    }
+    public function update_cart($Soluong){
+        $this->AuthDangnhap();
+        Session::put('Soluong', $Soluong);
+        $tongtien = Session::get('Soluong') * Session::get('Gia');
+        Session::put('Tongtien', $tongtien);
+        return redirect('/khachhang/giohang');
+    }
+    public function delete_cart($MaSP){
+        $this->AuthDangnhap();
         Session::put('Soluong', null);
         Session::put('MaSP', null);
         Session::put('Image', null);
         Session::put('TenSP', null);
         Session::put('Gia', null);
         Session::put('Tongtien', null);
-        return redirect('/khachhang/giohang');
+        return redirect()->back();
+    }
+    public function chitiet_thanhtoan(){
+        $this->AuthDangnhap();
+        Session::put('Soluong', null);
+        Session::put('MaSP', null);
+        Session::put('Image', null);
+        Session::put('TenSP', null);
+        Session::put('Gia', null);
+        Session::put('Tongtien', null);
+        $tmp1 = DB::table('dondathang')->join('sanpham', 'dondathang.MaSP', 'sanpham.MaSP')
+                                        ->join('khachhang', 'dondathang.MaKH', 'khachhang.MaKH')
+                                        ->orderBy('MaDon', 'desc')
+                                        ->get();
+        $donhang = $tmp1->take(1);
+        $donhang->all();
+
+        return view('khachhang.chitietdonhang',compact('donhang'));
+    }
+    public function chitiet_donhang($MaDon){
+        $this->AuthDangnhap();
+        $donhang = DB::table('dondathang')->join('sanpham', 'dondathang.MaSP', 'sanpham.MaSP')
+                                            ->join('khachhang', 'dondathang.MaKH', 'khachhang.MaKH')
+                                            ->where('MaDon', $MaDon)
+                                            ->get();
+        return view('khachhang.chitietdonhang',compact('donhang'));
+    }
+    public function lichsu(){
+        $this->AuthDangnhap();
+        $donhang = DB::table('dondathang')->join('sanpham', 'dondathang.MaSP', 'sanpham.MaSP')
+                                            ->where('MaKH', Session::get('MaKH'))->get();
+        return view('khachhang.lichsu', compact('donhang'));
     }
     public function add_cmt(Request $request, $MaSP, $MaKH){
+        $this->AuthDangnhap();
         $comment = $request->comment;
         $data['MaSP'] = $MaSP;
         $data['MaKH'] = $MaKH;

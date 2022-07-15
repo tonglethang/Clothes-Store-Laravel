@@ -1,0 +1,62 @@
+.chitiet{
+    margin: auto;
+    position: relative;
+    top: 200px;
+    width: 40%;
+    padding: 20px 0 20px 50px;
+    background-color:rgb(245, 245, 245);
+    box-shadow: 1px 1px 3px 0px rgb(0 0 0 / 20%), 0 1px 0 rgb(0 0 0 / 7%), inset 0 0 0 1px rgb(0 0 0 / 5%)
+}
+.chitiet h4{
+    color:#7a9c59;
+}
+.chitiet li{
+    font-size: 16px;
+    line-height: 30px;
+}
+.chitiet p{
+    font-size: 17px;
+    padding-top: 30px;
+    color: rgb(201, 58, 58);
+}
+.chitiet input[type="submit"]{
+    margin-top: 20px;
+    height: 40px;
+    border: none;
+    background-color:rgb(12, 18, 139);
+    color:rgb(255, 255, 255);
+    width: 130px;
+}
+.chitiet input[type="button"]{
+    margin-top: 20px;
+    margin-left: 50px;
+    height: 40px;
+    border: none;
+    background-color:rgb(49, 49, 53);
+    color:rgb(255, 255, 255);
+    width: 130px;
+}
+.chitiet input[type="submit"]:hover{
+    background-color:rgb(4, 7, 80);
+}
+.lichsu{
+    margin: auto;
+    position: relative;
+    top: 150px;
+    width: 60%;
+    padding: 20px 0 20px 20px;
+}
+.lichsu h4{
+    line-height: 20px;
+    padding: 30px 0 50px 0;
+    color:rgb(201, 58, 58);
+}
+.chitiet-lichsu{
+    padding: 20px;
+    margin-top: 20px;
+    background-color:rgb(245, 245, 245);
+    box-shadow: 1px 1px 3px 0px rgb(0 0 0 / 20%), 0 1px 0 rgb(0 0 0 / 7%), inset 0 0 0 1px rgb(0 0 0 / 5%);
+}
+.chitiet-lichsu ul{
+    list-style-type: none;
+}

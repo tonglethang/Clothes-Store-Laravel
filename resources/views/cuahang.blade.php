@@ -32,6 +32,7 @@
             <label class="psw-text"><a>Quên mật khẩu ?</a></label>
             <label class="psw-text">Bạn chưa có tài khoản ? <a href="/khachhang/dangky">Đăng ký</a></label> 
             <label class="psw-text"><a href="/admin/login">Đăng nhập với tư cách Admin</a></label>
+            <label class="psw-text"><a href="/giaohang/login">Đăng nhập với tư cách người giao hàng</a></label>
         </form>
         
         </div>
