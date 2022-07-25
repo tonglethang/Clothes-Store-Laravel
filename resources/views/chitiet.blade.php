@@ -77,7 +77,7 @@
                 <div class="product-inf">
              
                     <h3>{{$product->TenSP}}</h3>
-                    <form method="get" action="/khachhang/giohang/{{$product->MaSP}}&{{$product->Soluongcon}}">
+                    <form method="get" action="/khachhang/giohang/{{$product->MaSP}}">
                         @csrf
                         <div class="gia"><p><?php echo number_format($product->Gia,0,",", ".") ?><u>đ</u></p></div>
                         <div class="brand">
@@ -89,11 +89,18 @@
                         <div class="color">Màu sắc: {{$product->Color}}
                             
                         </div>
+                        @if ($product->Soluongcon != 0)
                         <div class="hangcon">
                             Số lượng hàng còn: {{$product->Soluongcon}}
                         </div>
+                        @endif
+                        @if ($product->Soluongcon == 0)
+                        <div class="hangcon" style="color: #e84545">
+                            Đã hết hàng
+                        </div>
+                        @endif
                         <div class="soluong">
-                            Số lượng: <input type="number" name="soluong" value="1" min="0" max="{{$product->Soluongcon}}"/>
+                            Số lượng: <input type="number" name="soluong" value="1" min="1" max="{{$product->Soluongcon}}"/>
                         </div>
                         @if (!session('username'))
                         <button onclick="change_login()" type="button" name="btnMua">MUA HÀNG</button>

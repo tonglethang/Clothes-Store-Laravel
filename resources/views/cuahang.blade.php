@@ -75,7 +75,6 @@
                 @endforeach
                 <div class="phantrang">
                 {{ $products->links() }}
-
                  </div>
 
                 

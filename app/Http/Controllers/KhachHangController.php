@@ -7,6 +7,7 @@ use App\Models\KhachHang;
 use App\Models\Product;
 use App\Models\Comment;
 use App\Models\DonDatHang;
+use App\Models\GioHang;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Session;
@@ -135,7 +136,7 @@ class KhachHangController extends Controller
             }
         }
         return redirect('/')->with('message1','Tên đăng nhập hoặc mật khẩu không chính xác');
-    }
+    }   
     public function AuthDangnhap(){
         $username = Session::get('username');
         $MaKH = Session::get('MaKH');
@@ -226,88 +227,112 @@ class KhachHangController extends Controller
     public function giohang(){
         $this->AuthDangnhap();
         $khachhang= DB::table('khachhang')->where('MaKH', Session::get('MaKH'))->get();
-        return view('khachhang.giohang', compact('khachhang'));
-    }
-    public function cart(Request $request, $MaSP, $Soluong){
-        $this->AuthDangnhap();
-        $soluong = $request->soluong;
-        // $data2 = DB::table('dondathang')->join('sanpham', 'dondathang.MaSP', '=', 'sanpham.MaSP')->get();
-        Session::put('Soluong', $soluong);
-        Session::put('Soluongbandau', $Soluong);
-        Session::put('MaSP', $MaSP);
-        $data = Product::where('MaSP', $MaSP)->get();
-
-        Session::put('Image', $data[0]['Image']);
-        Session::put('TenSP', $data[0]['TenSP']);
-        Session::put('Gia', $data[0]['Gia']);
-        $tongtien = $soluong * $data[0]['Gia'];
-        Session::put('Tongtien', $tongtien);
+        $sanpham = DB::table('giohang')->join('sanpham', 'giohang.MaSP', 'sanpham.MaSP')
+        ->join('khachhang', 'giohang.MaKH', 'khachhang.MaKH')
+        ->where('giohang.MaKH', Session::get('MaKH'))
+        ->get();
         
-
+        return view('khachhang.giohang', compact('sanpham','khachhang'));
+    }
+    public function cart(Request $request, $MaSP){
+        $this->AuthDangnhap();
+        $soluongmua = $request->soluong;
+        // $data2 = DB::table('dondathang')->join('sanpham', 'dondathang.MaSP', '=', 'sanpham.MaSP')->get();
+        $sanpham = GioHang::where('MaKH', Session::get('MaKH'))->Where('MaSP', $MaSP)->get();
+        if(count($sanpham) != 0){
+            return redirect()->back()->with('message1', 'Đã có sản phẩm trong giỏ hàng của bạn !');
+        }
+        GioHang::create(['MaKH' => Session::get('MaKH'),
+                        'MaSP' => $MaSP,
+                        'SoLuongMua' => $soluongmua]);
         return redirect('/khachhang/giohang');
     }
     public function dathang(Request $request){
         $this->AuthDangnhap();
+
         $thanhtoan = $request->thanhtoan;
-        $Soluong = Product::select('Soluongcon')->where('MaSP', Session::get('MaSP'))->get();
-        $Soluongcon = $Soluong[0]['Soluongcon'] - Session::get('Soluong');
+        $MaSP = GioHang::where('MaKH', Session::get('MaKH'))->get();
+;
+        $tensp = null;
+        for($i = 0; $i < count($MaSP); $i++){
+            $sanpham = Product::where('MaSP', $MaSP[$i]['MaSP'])->get();
+            $tensp .= $sanpham[0]['TenSP'].", ";
+        }
+        //Lấy số lượng mua từng sản phẩm
+        $digit = 0;
+        $count = 0;
+        $arr[] = null;
+        $tmp = $request->soluongmua;
+        while($tmp > 1){
+            $digit = $tmp % 10;
+            $tmp = (int)$tmp / 10;
+            $arr[$count] = $digit;
+            $count++;
+        }
+        $arr = array_reverse($arr);
+        // dd($MaSP[1]['MaSP']);
+        for($i = 0; $i < $count; $i++){
+            $sanpham = Product::where('MaSP', $MaSP[$i]['MaSP'])->get();
+            $soluongcon = $sanpham[0]['Soluongcon'] - $arr[$i];
+            Product::where('MaSP', $MaSP[$i]['MaSP'])->update(['Soluongcon' => $soluongcon]);
+        }
+
+
         DonDatHang::create(['MaKH'=>Session::get('MaKH'),
-                            'MaSP'=>Session::get('MaSP'),
-                            'TongTien'=>Session::get('Tongtien'),
-                            'SoLuongDH'=>Session::get('Soluong'),
+                            'TenSP' => $tensp,
+                            'TongTien'=> $request->tongtien,
+                            'SoLuongDH'=>$request->tongsoluong,
                             'Phuongthuc'=> $thanhtoan,
                             'ThoiGianDH'=>Carbon::now('Asia/Ho_Chi_Minh'),
                             'status'=> "Đang giao hàng"
                             ]);
-        Product::where('MaSP', Session::get('MaSP'))->update(['Soluongcon'=> $Soluongcon]);
-        return redirect('/khachhang/thanhtoan');
+        GioHang::where('MaKH', Session::get('MaKH'))->delete();
+        $madon = DonDatHang::orderBy('MaDon','desc')->get();
+        return redirect("/khachhang/thanhtoan/{$madon[0]['MaDon']}");
     }
-    public function update_cart($Soluong){
+    public function update_cart($soluong){
         $this->AuthDangnhap();
-        Session::put('Soluong', $Soluong);
-        $tongtien = Session::get('Soluong') * Session::get('Gia');
-        Session::put('Tongtien', $tongtien);
+        $digit = 0;
+        $count = 0;
+        $arr[] = null;
+        $tmp = $soluong;
+
+        while($tmp > 1){
+            $digit = $tmp % 10;
+            $tmp = (int)$tmp / 10;
+            $arr[$count] = $digit;
+            $count++;
+        }
+        $arr = array_reverse($arr);
+        $giohang = GioHang::where('MaKH', Session::get('MaKH'))->get();
+        for($i = 0; $i < $giohang->count(); $i++){
+             $giohang[$i]->SoLuongMua = $arr[$i];
+             $giohang[$i]->save();
+        }
         return redirect('/khachhang/giohang');
     }
-    public function delete_cart($MaSP){
+    public function delete_cart($MaGioHang){
         $this->AuthDangnhap();
-        Session::put('Soluong', null);
-        Session::put('MaSP', null);
-        Session::put('Image', null);
-        Session::put('TenSP', null);
-        Session::put('Gia', null);
-        Session::put('Tongtien', null);
+      
+        $data = GioHang::where('id', $MaGioHang)->get();
+        $sanpham = Product::where('MaSP', $data[0]['MaSP'])->get();
+        $soluongcon = $sanpham[0]['Soluongcon'] + $data[0]['SoLuongMua'];
+        Product::where('MaSP', $data[0]['MaSP'])->update(['Soluongcon'=>$soluongcon]);
+        GioHang::where('id', $MaGioHang)->delete();
+
         return redirect()->back();
     }
-    public function chitiet_thanhtoan(){
-        $this->AuthDangnhap();
-        Session::put('Soluong', null);
-        Session::put('MaSP', null);
-        Session::put('Image', null);
-        Session::put('TenSP', null);
-        Session::put('Gia', null);
-        Session::put('Tongtien', null);
-        $tmp1 = DB::table('dondathang')->join('sanpham', 'dondathang.MaSP', 'sanpham.MaSP')
-                                        ->join('khachhang', 'dondathang.MaKH', 'khachhang.MaKH')
-                                        ->orderBy('MaDon', 'desc')
-                                        ->get();
-        $donhang = $tmp1->take(1);
-        $donhang->all();
 
-        return view('khachhang.chitietdonhang',compact('donhang'));
-    }
     public function chitiet_donhang($MaDon){
         $this->AuthDangnhap();
-        $donhang = DB::table('dondathang')->join('sanpham', 'dondathang.MaSP', 'sanpham.MaSP')
-                                            ->join('khachhang', 'dondathang.MaKH', 'khachhang.MaKH')
+        $donhang = DB::table('dondathang')->join('khachhang', 'dondathang.MaKH', 'khachhang.MaKH')
                                             ->where('MaDon', $MaDon)
                                             ->get();
         return view('khachhang.chitietdonhang',compact('donhang'));
     }
     public function lichsu(){
         $this->AuthDangnhap();
-        $donhang = DB::table('dondathang')->join('sanpham', 'dondathang.MaSP', 'sanpham.MaSP')
-                                            ->where('MaKH', Session::get('MaKH'))->get();
+        $donhang = DB::table('dondathang')->where('MaKH', Session::get('MaKH'))->get();
         return view('khachhang.lichsu', compact('donhang'));
     }
     public function add_cmt(Request $request, $MaSP, $MaKH){

@@ -57,7 +57,7 @@
                     <ul>
                         <li>Mã đơn hàng: <b>{{$donhang->MaDon}}</b></li>
                         <li>Sản phẩm: <b>{{$donhang->TenSP}}</b></li>
-                        <li>Số lượng: <b>{{$donhang->SoLuongDH}}</b></li>
+                        <li>Tống số lượng: <b>{{$donhang->SoLuongDH}}</b></li>
                         <li>Tổng cộng: <b style="color: rgb(201, 58, 58)"><?php echo number_format($donhang->TongTien,0,",", ".")?><u>đ</u></b></li>
                         <li>Ngày đặt hàng: <b>{{$donhang->ThoiGianDH}}</b></li>
                         <li>Địa chỉ: <b>{{$donhang->DiaChi}}</b></li>

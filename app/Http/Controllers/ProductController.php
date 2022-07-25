@@ -131,12 +131,10 @@ class ProductController extends Controller
         $khachhang->all();
 
         $dondathang1 = DB::table('dondathang')->join('khachhang', 'dondathang.MaKH', 'khachhang.MaKH')
-                                            ->join('sanpham', 'dondathang.MaSP', 'sanpham.MaSP')
                                             ->where('status', 'Đang giao hàng')
                                             ->get();
         $dondathang1->all();
         $dondathang2 = DB::table('dondathang')->join('khachhang', 'dondathang.MaKH', 'khachhang.MaKH')
-                                            ->join('sanpham', 'dondathang.MaSP', 'sanpham.MaSP')
                                             ->where('status', 'Đã nhận hàng')
                                             ->get();
         $dondathang2->all();

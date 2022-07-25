@@ -255,7 +255,7 @@
                                     <td>{{ $dondathang1->TenKH}}</td>
                                     <td>{{ $dondathang1->TenSP}}</td>
                                     <td>{{ $dondathang1->SoLuongDH}}</td>
-                                    <td style="color: rgb(201, 58, 58)">{{$dondathang1->Gia}}<u>đ</u></td>
+                                    <td style="color: rgb(201, 58, 58)">{{$dondathang1->TongTien}}<u>đ</u></td>
                                     <td>{{ $dondathang1->Phuongthuc}}</td>
                                     <td>{{ $dondathang1->ThoiGianDH}}</td>
                                     <td>{{ $dondathang1->status}}</td>
@@ -286,7 +286,7 @@
                                     <td>{{ $dondathang2->TenKH}}</td>
                                     <td>{{ $dondathang2->TenSP}}</td>
                                     <td>{{ $dondathang2->SoLuongDH}}</td>
-                                    <td style="color: rgb(201, 58, 58)">{{$dondathang2->Gia}}<u>đ</u></td>
+                                    <td style="color: rgb(201, 58, 58)">{{$dondathang2->TongTien}}<u>đ</u></td>
                                     <td>{{ $dondathang2->Phuongthuc}}</td>
                                     <td>{{ $dondathang2->ThoiGianDH}}</td>
                                     <td>{{ $dondathang2->status}}</td>

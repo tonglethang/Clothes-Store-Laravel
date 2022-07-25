@@ -21,8 +21,12 @@
     <script>
         document.addEventListener("touchstart", function(){}, true);
         function Redirect() {
-            var a = document.getElementById("soluong");
-            window.location="/khachhang/giohang/update/" + a.value;
+            var a = document.getElementsByClassName("count");
+            var tmp = "";
+            for(var i=0; i<a.length; i++){
+                tmp += a[i].value;
+            }
+            window.location="/khachhang/giohang/update/" + tmp;
         }
     </script>
     <script src="{{ asset('js/index.js') }}"></script>
@@ -45,7 +49,6 @@
         </form>
         
         </div>
-        <input type="hidden" class="abc" value="{{session('Soluongbandau') + 1}}"/>
     <div class="containe">
        @include('template.header')
         <div class="content-cart">
@@ -57,43 +60,51 @@
                             <th>SỐ LƯỢNG</th>
                             <th>TẠM TÍNH</th>
                         </tr>
-                        @if (session('MaSP'))
+                        @if ($sanpham)
+                        <?php $dem = 0; $soluongmua = "";?>
+                        @foreach($sanpham as $sanphamm)
                         <tr>
                             <td>
-                                <a href="/khachhang/giohang/delete/{{session('MaSP')}}"><button type="button" class="delete-product" style="float:left">X</button></a>
-                                <img width="110" height="135" src="{{ asset('upload/' . session('Image') ) }} " style="float:left; padding: 10px"> 
-                                <p class="name-product" style="float:left">{{ session('TenSP') }} </p>
+                                <a href="/khachhang/giohang/delete/{{$sanphamm->id}}"><button type="button" class="delete-product" style="float:left">X</button></a>
+                                <img width="110" height="135" src="{{ asset('upload/' . $sanphamm->Image) }} " style="float:left; padding: 10px"> 
+                                <p class="name-product" style="float:left">{{ $sanphamm->TenSP }} </p>
                             </td>
                             <td>
-                                <p class="price-cart"><?php echo number_format(session('Gia'),0,",", ".")?><u>đ</u></p>
+                                <p class="price-cart"><?php echo number_format($sanphamm->Gia,0,",", ".")?><u>đ</u></p>
                             </td>
                             <td>
+                              
                                 <div class="qty mt-5">
-                                <div class="qty mt-5">
-                                        <span class="minus bg-dark">-</span>
-                                        <input type="number" id="soluong" class="count" name="soluong" value="{{session('Soluong')}}" min="1" max="{{session('Soluongbandau')}}">
-                                        <span class="plus bg-dark">+</span>
-                                </div>
+                                        <button class="minus bg-dark1" id="minus" onclick="minus({{$dem}})">-</button>
+                                        <input type="number" id="soluong" class="count" name="soluong" value="{{$sanphamm->SoLuongMua}}" min="1" max="{{session('Soluongbandau')}}">
+                                        <button class="plus bg-dark15" id="plus"  onclick="plus({{$dem}})">+</button>
+                                
                                 </div>
                             </td>
                             <td>
-                                <p class="price-cart"><?php echo number_format(session('Tongtien'),0,",", ".")?><u>đ</u></p>
+                                <p class="price-cart"><?php echo number_format($tongtien = $sanphamm->SoLuongMua * $sanphamm->Gia,0,",", ".")?><u>đ</u></p>
                             </td>
                         </tr>
+                        <?php $dem += 1; $soluongmua .= $sanphamm->SoLuongMua?>
+                        <input type="hidden" class="abc" value="{{$sanphamm->Soluongcon }}"/>
+                        <input type="hidden" class="soluong" value="{{$sanphamm->SoLuongMua }}"/>
+                        @endforeach
                         @endif
                     </table>
-                    @if (!session('MaSP'))
+                    @if (count($sanpham) == 0)
                         <div class="thongbao" style="padding: 40px 0px 36px 0px">
                             <h3>Chưa có sản phẩm trong giỏ hàng</h3>
                         </div>
                     @endif
                     <div class="update-cart">
                         <a href="/cuahang"><button class="add-product"><i class="fa-solid fa-arrow-left-long"></i> TIẾP TỤC XEM SẢN PHẨM</button></a>
-                        <button onclick=" Redirect()" class="update-product" type="submit" name="update-product">CẬP NHẬT GIỎ HÀNG</button>
+                        @if (count($sanpham) != 0)
+                        <button onclick=" Redirect()" id="updateCart" class="update-product" type="submit" name="update-product">CẬP NHẬT GIỎ HÀNG</button>
+                        @endif
                     </div>
             </div>
         </div>          
-         @if (session('MaSP'))
+        @if (count($sanpham) != 0)
         <div class="hoadon">
             <h4>ĐƠN HÀNG CỦA BẠN</h4>
             <table>
@@ -101,17 +112,24 @@
                     <th class="name-product">SẢN PHẨM</th>
                     <th class="total-product">TẠM TÍNH</th>
                 </tr>
+                <?php $tongtien = 0;
+                    $tongsoluong = 0
+                ?>
+                @foreach($sanpham as $sanpham)
                 <tr>
-                    <td class="name-product">{{session('TenSP')}}</td>
-                    <td class="total-product" style="color: rgb(233, 2, 2);"><?php echo number_format(session('Gia'),0,",", ".")?><u>đ</u><td>
+                    <td class="name-product">{{$sanpham->TenSP}}</td>
+                    <td class="total-product" style="color: rgb(233, 2, 2);"><?php echo number_format($sanpham->Gia,0,",", ".")?><u>đ</u><td>
                 </tr>
                 <tr>
                     <td class="name-product">Số lượng</td>
-                    <td class="total-product">{{session('Soluong')}}</td>
+                    <td class="total-product">{{$sanpham->SoLuongMua}}</td>
                 </tr>
+                <?php $tongtien += $sanpham->SoLuongMua * $sanpham->Gia;
+                    $tongsoluong += $sanpham->SoLuongMua ?>
+                @endforeach
                 <tr>
                     <td class="name-product">Tổng</td>
-                    <td class="total-product"  style="color: rgb(233, 2, 2);"><?php echo number_format(session('Tongtien'),0,",", ".")?><u>đ</u><td>
+                    <td class="total-product"  style="color: rgb(233, 2, 2);"><?php echo number_format($tongtien,0,",", ".")?><u>đ</u><td>
                 </tr>
             </table>
             <table>
@@ -135,7 +153,7 @@
                 @endforeach
             </table>
             <div class="thanhtoan">
-                <form action="/khachhang/giohang" method="post" >
+                <form action="/khachhang/giohang?soluongmua={{$soluongmua}}&tongtien={{$tongtien}}&tongsoluong={{$tongsoluong}}" method="post" >
                     @csrf
                     <input type="radio" name="thanhtoan" value="Chuyển khoản" required="required">
                     <label for="nganhang">Chuyển khoản ngân hàng</label>

@@ -12,7 +12,7 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
 use Illuminate\Database\Eloquent\Model;
 
-class  DonDatHang extends Model
+class  GioHang extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -21,17 +21,12 @@ class  DonDatHang extends Model
      *
      * @var array<int, string>
      */
-    protected $table = "dondathang";
+    protected $table = "giohang";
     protected $fillable = [
-        'MaDon',
+        'id',
+        'MaSP',
         'MaKH',
-        'TenSP',
-        'TongTien',
-        'SoLuongDH',
-        'Phuongthuc',
-        'ThoiGianDH',
-        'status',
-        'ThoiGianNH'
+        'SoLuongMua'
     ];
 
 }

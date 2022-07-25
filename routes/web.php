@@ -93,12 +93,11 @@ Route::post('/chitiet/{MaSP}&{MaKH}', [App\Http\Controllers\KhachHangController:
 
 // gio hang
 Route::get('/khachhang/giohang', [App\Http\Controllers\KhachHangController::class, 'giohang']);
-Route::get('/khachhang/giohang/{MaSP}&{SoLuong}', [App\Http\Controllers\KhachHangController::class, 'cart']);
-Route::get('/khachhang/giohang/delete/{MaSP}', [App\Http\Controllers\KhachHangController::class, 'delete_cart']);
-Route::get('/khachhang/giohang/update/{Soluong}', [App\Http\Controllers\KhachHangController::class, 'update_cart']);
+Route::get('/khachhang/giohang/{MaSP}', [App\Http\Controllers\KhachHangController::class, 'cart']);
+Route::get('/khachhang/giohang/delete/{MaGioHang}', [App\Http\Controllers\KhachHangController::class, 'delete_cart']);
+Route::get('/khachhang/giohang/update/{soluong}', [App\Http\Controllers\KhachHangController::class, 'update_cart']);
 Route::post('/khachhang/giohang', [App\Http\Controllers\KhachHangController::class, 'dathang']);
 Route::get('/khachhang/thanhtoan/{MaDon}', [App\Http\Controllers\KhachHangController::class, 'chitiet_donhang']);
-Route::get('/khachhang/thanhtoan', [App\Http\Controllers\KhachHangController::class, 'chitiet_thanhtoan']);
 Route::get('/khachhang/lichsu', [App\Http\Controllers\KhachHangController::class, 'lichsu']);
 
 

@@ -57,6 +57,7 @@
     text-align: center;
     border-radius: 50%;
     background-color: #2b2a2a ;
+    border: none;
     }
 .qty .minus {
     cursor: pointer;
@@ -70,6 +71,7 @@
     text-align: center;
     background-clip: padding-box;
     background-color: #2b2a2a ;
+    border: none;
 }
 span{
     -webkit-user-select: none;
