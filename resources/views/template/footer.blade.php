@@ -50,6 +50,6 @@
                 </div>
             </div>
             <div class="copyright">
-                © Wedsite được thực hiện bởi: TDS
+                © Wedsite được thực hiện bởi: LeThang
             </div>
         </div>

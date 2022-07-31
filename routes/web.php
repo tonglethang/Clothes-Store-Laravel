@@ -67,10 +67,10 @@ Route::get('/khachhang/dangky', function () {
 });
 //dăng ký
 Route::post('/khachhang/dangky', [App\Http\Controllers\KhachHangController::class, 'dangky']);
-Route::get('/khachhang/xacnhan', function () {  
-    return view('khachhang.xacnhan'); 
-});
-Route::post('/khachhang/xacnhan', [App\Http\Controllers\KhachHangController::class, 'xacnhan']);
+// Route::get('/khachhang/xacnhan', function () {  
+//     return view('khachhang.xacnhan'); 
+// });
+// Route::post('/khachhang/xacnhan', [App\Http\Controllers\KhachHangController::class, 'xacnhan']);
 //dang nhap
 Route::post('/', [App\Http\Controllers\KhachHangController::class, 'dangnhap']);
 

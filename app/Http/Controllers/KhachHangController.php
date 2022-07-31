@@ -72,54 +72,53 @@ class KhachHangController extends Controller
         if($message[0] != null || $message[1] != null || $message[2] != null || $message[3] != null || $message[4] != null || $message[5] != null){
             return redirect()->back()->with(['message1'=>$message[0], 'message2'=>$message[1], 'message3'=>$message[2], 'message4'=>$message[3], 'message5'=>$message[4], 'message6'=>$message[5]])->withInput();
         }
-        else{
-            $maxacnhan = rand(10000, 99999);
-            Session::put('maxacnhan', $maxacnhan);
-            $content = 'Mã xác nhận email của bạn là: '.$maxacnhan;
-            $mail_data = [
-                'recipient'=> $request->email,
-                'fromEmail'=> 'tdsstoredau@gmail.com',
-                'fromName'=> "TDS store",
-                'subject'=>"Xác nhận tài khoản email",
-                'body'=>$content,
-            ];
-            Mail::send('email-template', $mail_data, function($message_email) use ($mail_data){
-                $message_email->to($mail_data['recipient'])
-                                ->from($mail_data['fromEmail'], $mail_data['fromName'])
-                                ->subject($mail_data['subject']);
-            });
-            // KhachHang::create($data);
-            // Session::put('user_name', $data['TenDN']);
-            // Session::put('password', $data['Pass']);
-            return redirect('/khachhang/xacnhan');
+        // else{
+        //     $maxacnhan = rand(10000, 99999);
+        //     Session::put('maxacnhan', $maxacnhan);
+        //     $content = 'Mã xác nhận email của bạn là: '.$maxacnhan;
+        //     $mail_data = [
+        //         'recipient'=> $request->email,
+        //         'fromEmail'=> 'tdsstoredau@gmail.com',
+        //         'fromName'=> "TDS store",
+        //         'subject'=>"Xác nhận tài khoản email",
+        //         'body'=>$content,
+        //     ];
+        //     Mail::send('email-template', $mail_data, function($message_email) use ($mail_data){
+        //         $message_email->to($mail_data['recipient'])
+        //                         ->from($mail_data['fromEmail'], $mail_data['fromName'])
+        //                         ->subject($mail_data['subject']);
+        //     });
+            KhachHang::create($data);
+            Session::put('username', $data['TenDN']);
+            return redirect('/')->with('message1',"Đăng ký tài khoản thành công");
         }
-    }
-    public function xacnhan(Request $request){
-            if(Session::get('maxacnhan') != $request->maxacnhan){
-                return redirect('/khachhang/xacnhan')->with('message',"Mã xác nhận không trùng khớp !");
-            }
-            else{
-                $data['TenKH'] = Session::get('TenKH');
-                Session::put('TenKH', null);
-                $data['DiaChi'] = Session::get('DiaChi');
-                Session::put('DiaChi', null);
-                $data['Email']= Session::get('Email');
-                Session::put('Email', null);
-                $data['SDT']  = Session::get('SDT');
-                Session::put('SDT', null);
-                $data['TenDN']  = Session::get('TenDN');
-                Session::put('TenDN', null);
-                $data['Pass'] = Session::get('Pass');
-                Session::put('Pass', null);
-                KhachHang::create($data);
-                $MaKH =  KhachHang::select('MaKH')->where('TenDN', $data['TenDN'])->get();
-                Session::put('MaKH', $MaKH[0]['MaKH']);
-                Session::put('username', $data['TenDN']);
-                Session::put('password', $data['Pass']);
 
-                return redirect('/');
-            }
-    }
+    // public function xacnhan(Request $request){
+    //         if(Session::get('maxacnhan') != $request->maxacnhan){
+    //             return redirect('/khachhang/xacnhan')->with('message',"Mã xác nhận không trùng khớp !");
+    //         }
+    //         else{
+    //             $data['TenKH'] = Session::get('TenKH');
+    //             Session::put('TenKH', null);
+    //             $data['DiaChi'] = Session::get('DiaChi');
+    //             Session::put('DiaChi', null);
+    //             $data['Email']= Session::get('Email');
+    //             Session::put('Email', null);
+    //             $data['SDT']  = Session::get('SDT');
+    //             Session::put('SDT', null);
+    //             $data['TenDN']  = Session::get('TenDN');
+    //             Session::put('TenDN', null);
+    //             $data['Pass'] = Session::get('Pass');
+    //             Session::put('Pass', null);
+    //             KhachHang::create($data);
+    //             $MaKH =  KhachHang::select('MaKH')->where('TenDN', $data['TenDN'])->get();
+    //             Session::put('MaKH', $MaKH[0]['MaKH']);
+    //             Session::put('username', $data['TenDN']);
+
+
+    //             return redirect('/');
+    //         }
+    // }
     public function dangnhap(Request $request){
         $tendangnhap = $request->username;
         $pass = $request->password;
@@ -147,30 +146,30 @@ class KhachHangController extends Controller
             return redirect('/')->send();
         }
     }
-    public function forgetpass(Request $request){
-        $email= $request->Email;
-        $count =  KhachHang::select('Email')->where('Email', $email)->count();
-        if($count != 0){
-            $pass =  KhachHang::select('Pass')->where('Email', $email)->get();
-            $content = 'Mật khẩu của bạn là: '.$pass[0]['Pass'];
-            $mail_data = [
-                'recipient'=> $email,
-                'fromEmail'=> 'tsdstoredau@gmail.com',
-                'fromName'=> "TDS store",
-                'subject'=>"Lấy lại mật khẩu",
-                'body'=>$content,
-            ];
-            Mail::send('email-template', $mail_data, function($message_email) use ($mail_data){
-                $message_email->to($mail_data['recipient'])
-                                ->from($mail_data['fromEmail'], $mail_data['fromName'])
-                                ->subject($mail_data['subject']);
-            });
-            return redirect()->back()->withInput()->with('message2','Đã gửi mật khẩu về Email của bạn');
-        }
-        else{
-            return redirect()->back()->withInput()->with('message1','Email không tồn tại');
-        }
-    }
+    // public function forgetpass(Request $request){
+    //     $email= $request->Email;
+    //     $count =  KhachHang::select('Email')->where('Email', $email)->count();
+    //     if($count != 0){
+    //         $pass =  KhachHang::select('Pass')->where('Email', $email)->get();
+    //         $content = 'Mật khẩu của bạn là: '.$pass[0]['Pass'];
+    //         $mail_data = [
+    //             'recipient'=> $email,
+    //             'fromEmail'=> 'tsdstoredau@gmail.com',
+    //             'fromName'=> "TDS store",
+    //             'subject'=>"Lấy lại mật khẩu",
+    //             'body'=>$content,
+    //         ];
+    //         Mail::send('email-template', $mail_data, function($message_email) use ($mail_data){
+    //             $message_email->to($mail_data['recipient'])
+    //                             ->from($mail_data['fromEmail'], $mail_data['fromName'])
+    //                             ->subject($mail_data['subject']);
+    //         });
+    //         return redirect()->back()->withInput()->with('message2','Đã gửi mật khẩu về Email của bạn');
+    //     }
+    //     else{
+    //         return redirect()->back()->withInput()->with('message1','Email không tồn tại');
+    //     }
+    // }
     public function dangxuat(){
         Session::put('username', null);
         Session::put('password', null);

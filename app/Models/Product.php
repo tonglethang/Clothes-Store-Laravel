@@ -7,14 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use app\models\Product;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model implements HasMedia
+class Product extends Model 
 {
-    use HasApiTokens, HasFactory, Notifiable, HasMediaTrait;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +21,6 @@ class Product extends Model implements HasMedia
      */
     protected $table = "sanpham";
     protected $fillable = [
-        'MaSP',
         'TenSP',
         'Hang',
         'SoLuong',

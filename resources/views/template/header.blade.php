@@ -9,7 +9,7 @@
         </div>
 @endif
             <div class="logo">
-                <a href="/"style="color: black; text-decoration: none;">TDS Store</a>
+                <a href="/"style="color: black; text-decoration: none;">LT Store</a>
             </div>
             <div class="menu">
                 <div class="menu-ngang">
