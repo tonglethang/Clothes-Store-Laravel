@@ -11,6 +11,7 @@ use App\Models\GiaoHang;
 use Illuminate\Support\Facades\DB;
 use Session;
 use Carbon\Carbon;
+use File;
 
 class ProductController extends Controller
 {
@@ -233,6 +234,12 @@ class ProductController extends Controller
 
     public function update(Request $request, $MaSP){
         $this->Authlogin();
+        $address_img = Product::where('MaSP', $MaSP)->get();
+
+        $image_path = "upload/".$address_img[0]['Image'];  // Xóa ảnh cũ
+        if(File::exists($image_path)) {
+            File::delete($image_path);
+        }
         if($request->has('image_upload')){                             
             $file = $request->image_upload;    
             $ext = $request->image_upload->extension();     
